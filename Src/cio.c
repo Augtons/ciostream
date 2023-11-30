@@ -10,6 +10,11 @@ cio_err_t cio_istream_close(struct cio_istream *self)
     return self->cio_close(self);
 }
 
+uint8_t cio_istream_is_open(struct cio_istream *self)
+{
+    return self->cio_is_open(self);
+}
+
 cio_err_t cio_ostream_open(struct cio_ostream *self)
 {
     return self->cio_open(self);
@@ -18,6 +23,11 @@ cio_err_t cio_ostream_open(struct cio_ostream *self)
 cio_err_t cio_ostream_close(struct cio_ostream *self)
 {
     return self->cio_close(self);
+}
+
+uint8_t cio_ostream_is_open(struct cio_ostream *self)
+{
+    return self->cio_is_open(self);
 }
 
 size_t cio_read(cio_istream_t *self, uint8_t *buf, size_t len, size_t timeout)

@@ -36,19 +36,25 @@ typedef struct cio_ostream cio_ostream_t;
 struct cio_istream {
     cio_err_t (*cio_open)(struct cio_istream *self);
     cio_err_t (*cio_close)(struct cio_istream *self);
+    uint8_t (*cio_is_open)(struct cio_istream *self);
     size_t (*cio_read_func)(struct cio_istream *self, uint8_t *buf, size_t len, size_t timeout);
 };
 
 struct cio_ostream {
     cio_err_t (*cio_open)(struct cio_ostream *self);
     cio_err_t (*cio_close)(struct cio_ostream *self);
+    uint8_t (*cio_is_open)(struct cio_ostream *self);
     size_t (*cio_write_func)(struct cio_ostream *self, const uint8_t *buf, size_t len, size_t timeout);
 };
 
 cio_err_t cio_istream_open(struct cio_istream *self);
 cio_err_t cio_istream_close(struct cio_istream *self);
+uint8_t cio_istream_is_open(struct cio_istream *self);
+
 cio_err_t cio_ostream_open(struct cio_ostream *self);
 cio_err_t cio_ostream_close(struct cio_ostream *self);
+uint8_t cio_ostream_is_open(struct cio_ostream *self);
+
 size_t cio_read(cio_istream_t *self, uint8_t *buf, size_t len, size_t timeout);
 size_t cio_write(cio_ostream_t *self, const uint8_t *buf, size_t len, size_t timeout);
 
