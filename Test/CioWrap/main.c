@@ -9,27 +9,32 @@ static size_t read_from_stdin(cio_wrap_istream_t *self, uint8_t *buf, size_t len
 
 int main()
 {
-    // Make the output stream point to stdout。
-    cio_wrap_ostream_init(&os, write_to_stdout);
+    // 1. Make the output stream point to stdout。
+    cio_wrap_ostream_config_t ostream_config;
+    ostream_config.on_write_func = write_to_stdout;
 
-    // Make the input stream point to stdin.
-    cio_wrap_istream_init(&is, read_from_stdin);
+    cio_wrap_ostream_init(&os, &ostream_config);
 
-    // Get input/output stream base object. (For Polymorphism)
+    // 2. Make the input stream point to stdin.
+    cio_wrap_istream_config_t istream_config;
+    istream_config.on_read_func = read_from_stdin;
+
+    cio_wrap_istream_init(&is, &istream_config);
+
+    // 3. Get input/output stream base object. (For Polymorphism)
     cio_ostream_t *out = &os.ostream;
     cio_istream_t *in = &is.istream;
 
-    // Define a buffer.
+    // 4. Define a buffer.
     uint8_t buf[] = "Hello World";
 
     // Test 1: This will write to console (stdout).
-    cio_ostream_open(out);
     cio_write(out, buf, sizeof(buf), 0);
     cio_ostream_close(out);
 
     // Test 2: This will read from console (stdin).
     printf("\n---\nPlease input %zu characters.\n>>> ", sizeof(buf) - 1);
-    cio_istream_open(in);
+
     cio_read(in, buf, sizeof(buf) - 1, 0);
     cio_istream_close(in);
 
