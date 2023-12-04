@@ -71,6 +71,50 @@ cio_err_t cio_buf_istream_init(cio_buf_istream_t *istream, cio_buf_istream_confi
     return cio_rb_init(&istream->ringbuffer, istream->buffer, istream->buffer_size);
 }
 
+size_t cio_buf_istream_readline(cio_buf_istream_t *istream, uint8_t *buf, size_t max_len, cio_time_t timeout)
+{
+    cio_time_t timeout_time = cio_system_timestamp() + timeout;
+
+    if (buf == NULL) {
+        return 0;
+    }
+    size_t current = cio_rb_length(&istream->ringbuffer);
+    if (current >= max_len) {
+        return cio_rb_read(&istream->ringbuffer, buf, max_len);
+    }
+
+    size_t write_size = 0;
+    uint8_t *target_buf = buf;
+    size_t rest_len = max_len;
+
+    uint8_t temp = 0;
+    cio_time_t remain_time = timeout_time - cio_system_timestamp();
+
+    while (rest_len != 0) {
+        size_t size = cio_rb_read(&istream->ringbuffer, &temp, 1);
+        if (size == 0) {
+            if (remain_time > 0) {
+                size_t restore_size = istream->cio_buf_on_read_func(istream, istream->buffer, istream->buffer_size, remain_time);
+                cio_rb_restore(&istream->ringbuffer, restore_size);
+            } else {
+                return write_size;
+            }
+            remain_time = timeout_time - cio_system_timestamp();
+            continue;
+        }
+
+        *target_buf = temp;
+        ++write_size;
+        ++target_buf;
+        --rest_len;
+        if (temp == '\n') {
+            break;
+        }
+    }
+
+    return write_size;
+}
+
 /***** ostream method ******/
 cio_err_t cio_buf_ostream_init(cio_buf_ostream_t *ostream, cio_buf_ostream_config_t *config)
 {

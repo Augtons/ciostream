@@ -11,3 +11,6 @@ target_link_libraries(cio_wrap PUBLIC cio-static)
 
 add_executable(cio_buf_in "BufferedInputStream/base.c" "../Port/CMake/port.c")
 target_link_libraries(cio_buf_in PUBLIC cio-static)
+
+add_executable(cio_buf_in_readline "BufferedInputStream/readline.c" "../Port/CMake/port.c")
+target_link_libraries(cio_buf_in_readline PUBLIC cio-static)
