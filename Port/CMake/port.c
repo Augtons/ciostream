@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <assert.h>
 #include <time.h>
 #include "cio_port.h"
