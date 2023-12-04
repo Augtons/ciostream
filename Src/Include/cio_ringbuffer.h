@@ -36,8 +36,11 @@ typedef struct cio_rb cio_rb_t;
  * @param self The pointer to the ring buffer structure
  * @param buffer The pointer to the buffer array
  * @param buffer_size The size of the buffer array in bytes
+ * @return Successfully or not
+ *  - CIO_OK: Successfully
+ *  - CIO_ERR_INVALID_ARGS: Invalid arguments
  */
-void cio_rb_init(cio_rb_t *self, uint8_t *buffer, size_t buffer_size);
+cio_err_t cio_rb_init(cio_rb_t *self, uint8_t *buffer, size_t buffer_size);
 
 /**
  * @brief Get the length of the data stored in the ring buffer
@@ -97,6 +100,24 @@ size_t cio_rb_read(cio_rb_t *self, uint8_t *buf, size_t len);
  * @return The actual number of bytes that were written to the ring buffer
  */
 size_t cio_rb_write(cio_rb_t *self, const uint8_t *buf, size_t len);
+
+/**
+ * @brief Restore some of data in its buffer.
+ *
+ * Restore some data at the start of its buffer.
+ *
+ * @note This a dangerous operation.
+ * @param self The pointer to the ring buffer structure
+ * @param len Length of data to restore.
+ */
+void cio_rb_restore(cio_rb_t *self, size_t len);
+
+/**
+ * @brief Skip and discard some data in its buffer.
+ *
+ * @param self The pointer to the ring buffer structure
+ */
+size_t cio_rb_skip(cio_rb_t *self, size_t len);
 
 #ifdef __cplusplus
 }

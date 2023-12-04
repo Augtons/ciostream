@@ -1,7 +1,11 @@
 #include "cio_ringbuffer.h"
 
-void cio_rb_init(cio_rb_t *self, uint8_t *buffer, size_t buffer_size)
+cio_err_t cio_rb_init(cio_rb_t *self, uint8_t *buffer, size_t buffer_size)
 {
+    if (buffer == NULL) {
+        return CIO_ERR_INVALID_ARGS;
+    }
+
     self->buffer_size = buffer_size;
     self->buffer = buffer;
 
@@ -10,6 +14,8 @@ void cio_rb_init(cio_rb_t *self, uint8_t *buffer, size_t buffer_size)
 
     self->head = 0;
     self->tail = 0;
+
+    return CIO_OK;
 }
 
 size_t cio_rb_length(cio_rb_t *self)
@@ -68,4 +74,25 @@ size_t cio_rb_write(cio_rb_t *self, const uint8_t * const buf, size_t len)
     self->length += len_to_write;
 
     return count;
+}
+
+void cio_rb_restore(cio_rb_t *self, size_t len)
+{
+    self->length = len;
+    self->available_length = self->buffer_size - len;
+    self->head = 0;
+    self->tail = 0;
+}
+
+size_t cio_rb_skip(cio_rb_t *self, size_t len)
+{
+    uint8_t begin = self->head;
+    uint8_t len_to_skip = CIO_MIN(cio_rb_length(self), len);
+
+    self->length -= len_to_skip;
+    self->head = (begin + len_to_skip) % self->buffer_size;
+
+    self->available_length += len_to_skip;
+
+    return len_to_skip;
 }
