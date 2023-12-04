@@ -7,7 +7,7 @@ static cio_err_t cio_wrap_istream_close_func(cio_istream_t *self)
     return CIO_OK;
 }
 
-static size_t cio_wrap_read_func(cio_istream_t *self, uint8_t *buf, size_t len, size_t timeout)
+static size_t cio_wrap_read_func(cio_istream_t *self, uint8_t *buf, size_t len, cio_time_t timeout)
 {
     cio_wrap_istream_t *wrap_is = CIO_CONTAINER_OF(self, cio_wrap_istream_t, istream);
     return wrap_is->cio_wrap_on_read_func(wrap_is, buf, len, timeout);
@@ -20,7 +20,7 @@ static cio_err_t cio_wrap_ostream_close_func(cio_ostream_t *self)
     return CIO_OK;
 }
 
-static size_t cio_wrap_write_func(cio_ostream_t *self, const uint8_t *buf, size_t len, size_t timeout)
+static size_t cio_wrap_write_func(cio_ostream_t *self, const uint8_t *buf, size_t len, cio_time_t timeout)
 {
     cio_wrap_ostream_t *wrap_os = CIO_CONTAINER_OF(self, cio_wrap_ostream_t, ostream);
     return wrap_os->cio_wrap_on_write_func(wrap_os, buf, len, timeout);

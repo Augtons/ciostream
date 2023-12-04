@@ -13,8 +13,8 @@ typedef struct cio_wrap_ostream cio_wrap_ostream_t;
 typedef struct cio_wrap_istream_config cio_wrap_istream_config_t;
 typedef struct cio_wrap_ostream_config cio_wrap_ostream_config_t;
 
-typedef size_t (*cio_wrap_read_func_t)(cio_wrap_istream_t *self, uint8_t *buf, size_t len, size_t timeout);
-typedef size_t (*cio_wrap_write_func_t)(cio_wrap_ostream_t *self, const uint8_t *buf, size_t len, size_t timeout);
+typedef size_t (*cio_wrap_read_func_t)(cio_wrap_istream_t *self, uint8_t *buf, size_t len, cio_time_t timeout);
+typedef size_t (*cio_wrap_write_func_t)(cio_wrap_ostream_t *self, const uint8_t *buf, size_t len, cio_time_t timeout);
 
 struct cio_wrap_istream_config {
     cio_wrap_read_func_t on_read_func;
