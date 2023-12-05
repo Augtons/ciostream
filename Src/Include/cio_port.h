@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define CIO_ASSERT(expression)  do {                                                                  \
-                                    if (!(expression)) {                                                \
+                                    if (!(expression)) {                                              \
                                         cio_assert_failed(#expression, __func__, __FILE__, __LINE__); \
                                     }                                                                 \
                                 } while(0)
