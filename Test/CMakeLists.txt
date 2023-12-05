@@ -1,5 +1,8 @@
 project(ciostream-test)
 
+add_executable(cio_assert "Assert/main.c")
+target_link_libraries(cio_assert PUBLIC cio-static)
+
 add_executable(cio_rb "RingBuffer/baseio.c")
 target_link_libraries(cio_rb PUBLIC cio-static)
 

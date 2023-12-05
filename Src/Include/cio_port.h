@@ -3,14 +3,19 @@
 
 #include <stdint.h>
 
-#define CIO_ASSERT(expression) cio_assert(expression, __func__, __FILE__, __LINE__);
-#define cio_time_t int64_t
+#define CIO_ASSERT(expression)  do {                                                                  \
+                                    if (!(expression)) {                                                \
+                                        cio_assert_failed(#expression, __func__, __FILE__, __LINE__); \
+                                    }                                                                 \
+                                } while(0)
+
+typedef int64_t cio_time_t;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void cio_assert(int expression, const char * function, const char * file, int line);
+void cio_assert_failed(const char *expression, const char *function, const char *file, int line);
 
 cio_time_t cio_system_timestamp();
 
