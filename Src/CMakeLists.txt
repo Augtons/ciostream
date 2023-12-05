@@ -2,6 +2,7 @@ project(libciostream)
 
 file(GLOB_RECURSE CIO_SRCS_OR_DIRS LIST_DIRECTORIES true "*.c" "*.cpp")
 list(APPEND CIO_SRCS_OR_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
+list(APPEND CIO_SRCS_OR_DIRS "${CIO_ROOT}/Port/CMake/port.c")
 
 foreach(item IN LISTS CIO_SRCS_OR_DIRS)
     if(IS_DIRECTORY "${item}")
