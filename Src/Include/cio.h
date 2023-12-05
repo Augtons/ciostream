@@ -35,6 +35,7 @@ typedef enum cio_err {
 
 typedef struct cio_istream cio_istream_t;
 typedef struct cio_ostream cio_ostream_t;
+typedef struct cio_timeout_keeper cio_timeout_keeper_t;
 
 struct cio_istream {
     cio_err_t (*cio_close)(struct cio_istream *self);
@@ -46,11 +47,20 @@ struct cio_ostream {
     size_t (*cio_write_func)(struct cio_ostream *self, const uint8_t *buf, size_t len, cio_time_t timeout);
 };
 
+struct cio_timeout_keeper {
+    cio_time_t start_time;
+    cio_time_t wait_time;
+};
+
+#define CIO_TIMEOUT_KEEPER(wait_time)  { cio_system_timestamp(), (wait_time) }
+
 cio_err_t cio_istream_close(struct cio_istream *self);
 cio_err_t cio_ostream_close(struct cio_ostream *self);
 
 size_t cio_read(cio_istream_t *self, uint8_t *buf, size_t len, cio_time_t timeout);
 size_t cio_write(cio_ostream_t *self, const uint8_t *buf, size_t len, cio_time_t timeout);
+
+cio_bool_t cio_timeout_check(cio_timeout_keeper_t *keeper);
 
 #ifdef __cplusplus
 }

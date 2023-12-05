@@ -10,6 +10,7 @@
                                 } while(0)
 
 typedef int64_t cio_time_t;
+typedef uint8_t cio_bool_t;
 
 #ifdef __cplusplus
 extern "C" {
