@@ -76,12 +76,14 @@ size_t cio_rb_write(cio_rb_t *self, const uint8_t * const buf, size_t len)
     return count;
 }
 
-void cio_rb_restore(cio_rb_t *self, size_t len)
+size_t cio_rb_restore(cio_rb_t *self, size_t len)
 {
-    self->length = len;
-    self->available_length = self->buffer_size - len;
+    self->length = CIO_MIN(len, self->buffer_size);
+    self->available_length = self->buffer_size - self->length;
     self->head = 0;
     self->tail = 0;
+
+    return self->length;
 }
 
 size_t cio_rb_skip(cio_rb_t *self, size_t len)
