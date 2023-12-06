@@ -109,13 +109,13 @@ cio_err_t cio_buf_ostream_init(cio_buf_ostream_t *ostream, cio_buf_ostream_confi
  *
  * This function reads a line of data in BufferedOutputStream, ending with `\n`.
  *
- * @param[in] istream: The pointer to the InputStream structure
+ * @param[in] buf_istream: The pointer to the InputStream structure
  * @param[out] buf: Buffer
  * @param[in] max_len: Maximum read length
  * @param[in] timeout: Timeout
  * @return The actual number of bytes that were read
  */
-size_t cio_buf_istream_readline(cio_buf_istream_t *istream, uint8_t *buf, size_t max_len, cio_time_t timeout);
+size_t cio_buf_istream_readline(cio_istream_t *buf_istream, uint8_t *buf, size_t max_len, cio_time_t timeout);
 
 #ifdef __cplusplus
 }

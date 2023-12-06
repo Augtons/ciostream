@@ -71,8 +71,10 @@ cio_err_t cio_buf_istream_init(cio_buf_istream_t *istream, cio_buf_istream_confi
     return cio_rb_init(&istream->ringbuffer, istream->buffer, istream->buffer_size);
 }
 
-size_t cio_buf_istream_readline(cio_buf_istream_t *istream, uint8_t *buf, size_t max_len, cio_time_t timeout)
+size_t cio_buf_istream_readline(cio_istream_t *buf_istream, uint8_t *buf, size_t max_len, cio_time_t timeout)
 {
+    cio_buf_istream_t *istream = CIO_CONTAINER_OF(buf_istream, cio_buf_istream_t , istream);
+
     cio_time_t timeout_time = cio_system_timestamp() + timeout;
 
     if (buf == NULL) {
