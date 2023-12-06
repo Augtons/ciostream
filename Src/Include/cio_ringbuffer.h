@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+typedef struct cio_rb cio_rb_t;
+
 /**
  * @brief Ring buffer structure
  *
@@ -23,8 +25,6 @@ struct cio_rb {
     uint8_t tail; ///< The tail pointer, pointing to the next writable position
 };
 
-typedef struct cio_rb cio_rb_t;
-
 /**
  * @brief Initialize a ring buffer
  *
@@ -33,9 +33,9 @@ typedef struct cio_rb cio_rb_t;
  * The buffer array must be allocated BY THE CALLER and must not be NULL.
  * The buffer size must be positive and must not exceed the size of the buffer array.
  *
- * @param self The pointer to the ring buffer structure
- * @param buffer The pointer to the buffer array
- * @param buffer_size The size of the buffer array in bytes
+ * @param self: The pointer to the ring buffer structure
+ * @param buffer: The pointer to the buffer array
+ * @param buffer_size: The size of the buffer array in bytes
  * @return Successfully or not
  *  - CIO_OK: Successfully
  *  - CIO_ERR_INVALID_ARGS: Invalid arguments
@@ -47,7 +47,7 @@ cio_err_t cio_rb_init(cio_rb_t *self, uint8_t *buffer, size_t buffer_size);
  *
  * This function returns the current length of the data stored in the ring buffer in bytes.
  *
- * @param self The pointer to the ring buffer structure
+ * @param self: The pointer to the ring buffer structure
  * @return The length of the data stored in the ring buffer in bytes
  */
 size_t cio_rb_length(cio_rb_t *self);
@@ -58,7 +58,7 @@ size_t cio_rb_length(cio_rb_t *self);
  * This function returns the current available space in the ring buffer in bytes.
  * It is equal to the buffer size minus the length of the data stored in the buffer.
  *
- * @param self The pointer to the ring buffer structure
+ * @param self: The pointer to the ring buffer structure
  * @return The available space in the ring buffer in bytes
  */
 size_t cio_rb_available_length(cio_rb_t *self);
@@ -70,7 +70,7 @@ size_t cio_rb_available_length(cio_rb_t *self);
  * It does not fill the buffer array with zero bytes for performance reasons,
  * but makes the data unreadable and overwrites it on the next write operation.
  *
- * @param self The pointer to the ring buffer structure
+ * @param self: The pointer to the ring buffer structure
  */
 void cio_rb_clear(cio_rb_t *self);
 
@@ -81,9 +81,9 @@ void cio_rb_clear(cio_rb_t *self);
  * It takes the length of the buffer array as a parameter, and returns the actual number of bytes that were read from the ring buffer.
  * The function does not modify the content of the ring buffer for performance reasons, only the head pointer.
  *
- * @param self The pointer to the ring buffer structure
- * @param buf The pointer to the buffer array
- * @param len The length of the buffer array in bytes
+ * @param[in] self: The pointer to the ring buffer structure
+ * @param[out] buf: The pointer to the buffer array
+ * @param[in] len: The length of the buffer array in bytes
  * @return The actual number of bytes that were read from the ring buffer
  */
 size_t cio_rb_read(cio_rb_t *self, uint8_t *buf, size_t len);
@@ -94,28 +94,31 @@ size_t cio_rb_read(cio_rb_t *self, uint8_t *buf, size_t len);
  * This function writes data to the ring buffer from a given buffer array.
  * It takes the length of the buffer array as a parameter, and returns the actual number of bytes that were written to the ring buffer.
  *
- * @param self The pointer to the ring buffer structure
- * @param buf The pointer to the buffer array
- * @param len The length of the buffer array in bytes
+ * @param self: The pointer to the ring buffer structure
+ * @param buf: The pointer to the buffer array
+ * @param len: The length of the buffer array in bytes
  * @return The actual number of bytes that were written to the ring buffer
  */
 size_t cio_rb_write(cio_rb_t *self, const uint8_t *buf, size_t len);
 
 /**
- * @brief Restore some of data in its buffer.
+ * @brief Restore data in its buffer.
  *
  * Restore some data at the start of its buffer.
  *
  * @note This a dangerous operation.
- * @param self The pointer to the ring buffer structure
- * @param len Length of data to restore.
+ * @param self: The pointer to the ring buffer structure
+ * @param len: Length of data to restore. If it is greater than the buffer size, All of data will be restored.
+ * @return The actual number of bytes that were restored from the buffer.
  */
-void cio_rb_restore(cio_rb_t *self, size_t len);
+size_t cio_rb_restore(cio_rb_t *self, size_t len);
 
 /**
- * @brief Skip and discard some data in its buffer.
+ * @brief Skip and discard data in its buffer.
  *
- * @param self The pointer to the ring buffer structure
+ * @param self: The pointer to the ring buffer structure
+ * @param len: Length of data to skip. If it is greater than the buffer size, All of data will be restored.
+ * @return The actual number of bytes that were skipped from the buffer.
  */
 size_t cio_rb_skip(cio_rb_t *self, size_t len);
 

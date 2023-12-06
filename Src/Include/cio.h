@@ -28,6 +28,7 @@
 extern "C" {
 #endif
 
+/* Error codes */
 typedef enum cio_err {
     CIO_OK,
     CIO_ERR_INVALID_ARGS
@@ -37,14 +38,20 @@ typedef struct cio_istream cio_istream_t;
 typedef struct cio_ostream cio_ostream_t;
 typedef struct cio_timeout_keeper cio_timeout_keeper_t;
 
+/**
+ * @brief InputStream base class
+ */
 struct cio_istream {
-    cio_err_t (*cio_close)(struct cio_istream *self);
-    size_t (*cio_read_func)(struct cio_istream *self, uint8_t *buf, size_t len, cio_time_t timeout);
+    cio_err_t (*cio_close)(struct cio_istream *self); ///< Close callback function pointer.
+    size_t (*cio_read_func)(struct cio_istream *self, uint8_t *buf, size_t len, cio_time_t timeout); ///< Read callback function pointer.
 };
 
+/**
+ * @brief OutputStream base class
+ */
 struct cio_ostream {
-    cio_err_t (*cio_close)(struct cio_ostream *self);
-    size_t (*cio_write_func)(struct cio_ostream *self, const uint8_t *buf, size_t len, cio_time_t timeout);
+    cio_err_t (*cio_close)(struct cio_ostream *self); ///< Close callback function pointer.
+    size_t (*cio_write_func)(struct cio_ostream *self, const uint8_t *buf, size_t len, cio_time_t timeout); ///< Write callback function pointer.
 };
 
 struct cio_timeout_keeper {
@@ -54,10 +61,48 @@ struct cio_timeout_keeper {
 
 #define CIO_TIMEOUT_KEEPER(wait_time)  { cio_system_timestamp(), (wait_time) }
 
+/**
+ * @brief Close an InputStream
+ *
+ * @param self: The pointer to the InputStream structure
+ * @return Successfully or not
+ *  - CIO_OK: Successfully
+ */
 cio_err_t cio_istream_close(struct cio_istream *self);
+
+/**
+ * @brief Close an OutputStream
+ *
+ * @param self: The pointer to the OutputStream structure
+ * @return Successfully or not
+ *  - CIO_OK: Successfully
+ */
 cio_err_t cio_ostream_close(struct cio_ostream *self);
 
+/**
+ * @brief Reads data from an InputStream.
+ *
+ * This function reads data from an InputStream
+ *
+ * @param[in] self: The pointer to the InputStream structure
+ * @param[out] buf: Buffer
+ * @param[in] len: Length to read
+ * @param[in] timeout: Timeout
+ * @return The actual number of bytes that were read
+ */
 size_t cio_read(cio_istream_t *self, uint8_t *buf, size_t len, cio_time_t timeout);
+
+/**
+ * @brief Write data to an OutputStream.
+ *
+ * This function writes data to an OutputStream
+ *
+ * @param self: The pointer to the OutputStream structure
+ * @param buf: Buffer
+ * @param len: Length to write
+ * @param timeout: Timeout
+ * @return The actual number of bytes that were write
+ */
 size_t cio_write(cio_ostream_t *self, const uint8_t *buf, size_t len, cio_time_t timeout);
 
 cio_bool_t cio_timeout_check(cio_timeout_keeper_t *keeper);
