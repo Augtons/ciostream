@@ -10,6 +10,7 @@ static cio_err_t cio_buf_istream_close_func(cio_istream_t *self)
 
 static size_t cio_buf_read_func(cio_istream_t *self, uint8_t *buf, size_t len, cio_time_t timeout)
 {
+    cio_bool_t need_wait = (timeout != 0);
     cio_time_t timeout_time = cio_system_timestamp() + timeout;
 
     if (buf == NULL) {
@@ -26,9 +27,11 @@ static size_t cio_buf_read_func(cio_istream_t *self, uint8_t *buf, size_t len, c
     uint8_t *target_buf = buf + write_size;
     size_t rest_len = len - write_size;
 
+    uint8_t number_of_reads = 0;
     cio_time_t remain_time = timeout_time - cio_system_timestamp();
 
-    while (remain_time > 0) {
+    while (number_of_reads == 0 || (need_wait && remain_time > 0)) {
+        ++number_of_reads;
         if (rest_len > is_buf->buffer_size) {
             write_size += is_buf->cio_buf_on_read_func(is_buf, target_buf, is_buf->buffer_size, remain_time);
             target_buf = buf + write_size;
@@ -76,6 +79,7 @@ size_t cio_buf_istream_readline(cio_istream_t *buf_istream, uint8_t *buf, size_t
 {
     cio_buf_istream_t *istream = CIO_CONTAINER_OF(buf_istream, cio_buf_istream_t , istream);
 
+    cio_bool_t need_wait = (timeout != 0);
     cio_time_t timeout_time = cio_system_timestamp() + timeout;
 
     if (buf == NULL) {
@@ -93,10 +97,13 @@ size_t cio_buf_istream_readline(cio_istream_t *buf_istream, uint8_t *buf, size_t
     uint8_t temp = 0;
     cio_time_t remain_time = timeout_time - cio_system_timestamp();
 
+    uint8_t number_of_reads = 0;
+
     while (rest_len != 0) {
         size_t size = cio_rb_read(&istream->ringbuffer, &temp, 1);
         if (size == 0) {
-            if (remain_time > 0) {
+            if (number_of_reads == 0 || (need_wait && remain_time > 0)) {
+                ++number_of_reads;
                 size_t restore_size = istream->cio_buf_on_read_func(istream, istream->buffer, istream->buffer_size, remain_time);
                 cio_rb_restore(&istream->ringbuffer, restore_size);
             } else {
