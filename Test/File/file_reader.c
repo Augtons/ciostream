@@ -18,7 +18,7 @@ int main()
         .buffer = buffer,
         .buffer_size = sizeof(buffer),
         .on_read_func = my_file_read,
-        .user_data = file
+        .user_data = (void*)file
     };
 
     cio_buf_istream_init(&in, &config);
