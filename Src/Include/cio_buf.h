@@ -40,6 +40,7 @@ typedef size_t (*cio_buf_write_func_t)(cio_buf_ostream_t *self, const uint8_t *b
  * @brief BufferedInputStream configuration.
  */
 struct cio_buf_istream_config {
+    void *user_data; ///< User data
     uint8_t *buffer; ///< Buffer
     uint8_t buffer_size; ///< Buffer size
     cio_buf_read_func_t on_read_func; ///< Read callback function
@@ -49,6 +50,7 @@ struct cio_buf_istream_config {
  * @brief BufferedOutputStream configuration.
  */
 struct cio_buf_ostream_config {
+    void *user_data; ///< User data
     uint8_t *buffer; ///< Buffer
     uint8_t buffer_size;  ///< Buffer size
     cio_buf_write_func_t on_write_func; ///< Write callback function

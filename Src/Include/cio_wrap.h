@@ -39,6 +39,7 @@ typedef size_t (*cio_wrap_write_func_t)(cio_wrap_ostream_t *self, const uint8_t 
  * @brief WrapInputStream configuration.
  */
 struct cio_wrap_istream_config {
+    void *user_data; ///< User data
     cio_wrap_read_func_t on_read_func; ///< Read callback function pointer.
 };
 
@@ -46,6 +47,7 @@ struct cio_wrap_istream_config {
  * @brief WrapOutputStream configuration.
  */
 struct cio_wrap_ostream_config {
+    void *user_data; ///< User data
     cio_wrap_write_func_t on_write_func; ///< Write callback function pointer.
 };
 

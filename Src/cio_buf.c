@@ -63,6 +63,7 @@ cio_err_t cio_buf_istream_init(cio_buf_istream_t *istream, cio_buf_istream_confi
 {
     istream->istream.cio_close = cio_buf_istream_close_func;
     istream->istream.cio_read_func = cio_buf_read_func;
+    istream->istream.user_data = config->user_data;
 
     istream->buffer = config->buffer;
     istream->buffer_size = config->buffer_size;
@@ -122,6 +123,7 @@ cio_err_t cio_buf_ostream_init(cio_buf_ostream_t *ostream, cio_buf_ostream_confi
 {
     ostream->ostream.cio_close = cio_buf_ostream_close_func;
     ostream->ostream.cio_write_func = cio_buf_write_func;
+    ostream->ostream.user_data = config->user_data;
 
     ostream->buffer = config->buffer;
     ostream->buffer_size = config->buffer_size;

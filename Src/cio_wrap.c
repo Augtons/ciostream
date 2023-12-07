@@ -31,6 +31,7 @@ cio_err_t cio_wrap_istream_init(cio_wrap_istream_t *istream, cio_wrap_istream_co
 {
     istream->istream.cio_close = cio_wrap_istream_close_func;
     istream->istream.cio_read_func = cio_wrap_read_func;
+    istream->istream.user_data = config->user_data;
 
     istream->cio_wrap_on_read_func = config->on_read_func;
 
@@ -42,6 +43,7 @@ cio_err_t cio_wrap_ostream_init(cio_wrap_ostream_t *ostream, cio_wrap_ostream_co
 {
     ostream->ostream.cio_close = cio_wrap_ostream_close_func;
     ostream->ostream.cio_write_func = cio_wrap_write_func;
+    ostream->ostream.user_data = config->user_data;
 
     ostream->cio_wrap_on_write_func = config->on_write_func;
 

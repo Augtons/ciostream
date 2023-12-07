@@ -42,6 +42,7 @@ typedef struct cio_timeout_keeper cio_timeout_keeper_t;
  * @brief InputStream base class
  */
 struct cio_istream {
+    void* user_data; ///< User data.
     cio_err_t (*cio_close)(struct cio_istream *self); ///< Close callback function pointer.
     size_t (*cio_read_func)(struct cio_istream *self, uint8_t *buf, size_t len, cio_time_t timeout); ///< Read callback function pointer.
 };
@@ -50,6 +51,7 @@ struct cio_istream {
  * @brief OutputStream base class
  */
 struct cio_ostream {
+    void* user_data; ///< User data.
     cio_err_t (*cio_close)(struct cio_ostream *self); ///< Close callback function pointer.
     size_t (*cio_write_func)(struct cio_ostream *self, const uint8_t *buf, size_t len, cio_time_t timeout); ///< Write callback function pointer.
 };
