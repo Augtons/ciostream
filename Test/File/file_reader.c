@@ -24,10 +24,11 @@ int main()
     cio_buf_istream_init(&in, &config);
 
     size_t read_len;
+    size_t line_number = 0;
     do {
         uint8_t read_buffer[256] = {0};
         read_len = cio_buf_istream_readline(&in.istream, read_buffer, sizeof(read_buffer), 0);
-        printf("%.*s", (int)read_len, read_buffer);
+        printf("[%2zu] |%.*s", ++line_number, (int)read_len, read_buffer);
     } while (read_len != 0);
 
     fclose(file);
